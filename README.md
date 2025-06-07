@@ -20,3 +20,9 @@ npm install --save-dev jest-environment-jsdom
 
 # 6. Inicialize a configuração do Jest
 npx ts-jest config:init
+
+
+
+
+
+$ curl --location --request GET 'https://launch.micronaut.io/create/default/appname.appname?lang=JAVA&build=MAVEN&test=JUNIT&javaVersion=JDK_21&features=yaml,lombok,validation,serialization-jackson,data-jdbc,jdbc-hikari,postgres,flyway,reactor,openapi,swagger-ui,assertj,mockito' --output appname.zip
