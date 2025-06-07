@@ -17,6 +17,18 @@
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
+.logo[data-color="#5a29e4"]:hover { /* Axios */
+  filter: drop-shadow(0 0 2em #fff8);
+}
+.logo[data-color="#ff4154"]:hover { /* React Query */
+  filter: drop-shadow(0 0 2em #ff4154aa);
+}
+.logo[data-color="#ffb300"]:hover { /* Zustand */
+  filter: drop-shadow(0 0 2em #ffb300aa);
+}
+.logo[data-color="#007fff"]:hover { /* MUI */
+  filter: drop-shadow(0 0 2em #007fffaa);
+}
 
 @keyframes logo-spin {
   from {
