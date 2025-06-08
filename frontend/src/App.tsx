@@ -12,6 +12,8 @@ import viteLogo from '/vite.svg';
 import { Box } from '@mui/material';
 import { purple } from '@mui/material/colors';
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000';
+
 // Zustand store
 const useCounterStore = create<{ count: number; inc: () => void }>((set) => ({
   count: 0,
@@ -20,7 +22,7 @@ const useCounterStore = create<{ count: number; inc: () => void }>((set) => ({
 
 // React Query
 const fetchData = async () => {
-  const res = await axios.get('https://jsonplaceholder.typicode.com/todos/1');
+  const res = await axios.get(BACKEND_URL + '/books/1');
   return res.data;
 };
 

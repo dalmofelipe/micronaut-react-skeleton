@@ -9,6 +9,13 @@ micronaut:
       swagger-ui:
         paths: classpath:META-INF/swagger/views/swagger-ui
         mapping: /swagger-ui/**
+  server:
+    cors:
+      enabled: true
+      configurations:
+        ui:
+          allowed-origins:
+            - ${ FRONTEND_URL:`http://localhost:5000` }
 datasources:
   default:
     url: ${ JDBC_URL:`jdbc:h2:mem:testedb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE` }
