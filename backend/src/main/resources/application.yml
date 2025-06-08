@@ -11,10 +11,23 @@ micronaut:
         mapping: /swagger-ui/**
 datasources:
   default:
-    driver-class-name: org.postgresql.Driver
-    db-type: postgres
-    dialect: POSTGRES
+    url: ${ JDBC_URL:`jdbc:h2:mem:testedb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE` }
+    driver-class-name: ${JDBC_DRIVER:org.h2.Driver}
+    dialect: ${ JDBC_DIALECT:H2 }
+    db-type: ${ JDBC_DB_TYPE:postgres }
+    username: ${ JDBC_USERNAME:sa }
+    password: ${ JDBC_PASSWORD:"" }
+    schema-generate: CREATE_DROP
 flyway:
   datasources:
     default:
       enabled: true
+jpa:
+  default:
+    entity-scan:
+      packages: mn_react.backend.entities
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: update
+        show_sql: true
