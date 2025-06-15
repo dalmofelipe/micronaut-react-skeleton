@@ -12,7 +12,8 @@ import mn_react.repositories.BookRepository;
 @Singleton
 public class DataLoader implements ApplicationEventListener<ServerStartupEvent> {
     
-    @Inject private BookRepository bookRepository;
+    @Inject 
+    private BookRepository bookRepository;
 
     @Override
     public void onApplicationEvent(ServerStartupEvent event) {

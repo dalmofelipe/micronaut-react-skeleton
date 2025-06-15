@@ -14,7 +14,8 @@ import mn_react.repositories.BookRepository;
 @Controller("/books")
 public class BookController {
 
-    @Inject BookRepository bookRepository;
+    @Inject 
+    BookRepository bookRepository;
 
     @Get
     HttpResponse<List<Book>> getAllBooks() {
