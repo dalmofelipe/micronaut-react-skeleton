@@ -2,11 +2,9 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { DefaultLayout } from './layouts/DefaultLayout';
-import { BookPage } from "./pages/BookPage/BookPage";
-import { HomePage } from "./pages/HomePage/HomePage";
+import { BlogEditPage } from "./pages/BlogPage/BlogEditPage";
 import { BlogListPage } from "./pages/BlogPage/BlogListPage";
 import { BlogPostPage } from "./pages/BlogPage/BlogPostPage";
-import { BlogEditPage } from "./pages/BlogPage/BlogEditPage";
 import { useThemeStore } from "./store/useThemeStore";
 import { darkTheme, lightTheme } from "./theme";
 
@@ -23,8 +21,7 @@ export const Router = () => {
         <BrowserRouter>
           <Routes>
             <Route element={<DefaultLayout />}>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/books" element={<BookPage />} />
+              <Route path="/" element={<BlogListPage />} />
               <Route path="/blog" element={<BlogListPage />} />
               <Route path="/blog/new" element={<BlogEditPage />} />
               <Route path="/blog/edit/:slug" element={<BlogEditPage />} />

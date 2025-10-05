@@ -1,7 +1,25 @@
-import { Box, Typography, TextField, Button, Paper, CircularProgress, Alert } from "@mui/material";
+import { Box, Typography, TextField, Button, Paper, CircularProgress, Alert, styled } from "@mui/material";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getPostBySlug, useCreatePost, useUpdatePost } from "../../services/usePostService";
+
+const EditWrapper = styled(Box)`
+  padding: 24px;
+  max-width: 1024px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+`;
+
+const EditPaper = styled(Paper)`
+  padding: 24px;
+`;
+
+const EditActions = styled('div')`
+  margin-top: 16px;
+  display: flex;
+  gap: 16px;
+`;
 
 export const BlogEditPage = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -93,14 +111,14 @@ export const BlogEditPage = () => {
 
   if (!isNew && !post) {
     return (
-      <Box sx={{ p: 3 }}>
+      <EditWrapper>
         <Typography variant="h4">Post não encontrado</Typography>
-      </Box>
+      </EditWrapper>
     );
   }
 
   return (
-    <Box sx={{ p: 3, maxWidth: 1024, width: '100%', mx: 'auto' }}>
+    <EditWrapper>
       <Typography variant="h4" component="h1" gutterBottom>
         {isNew ? 'Novo Post' : 'Editar Post'}
       </Typography>
@@ -111,7 +129,7 @@ export const BlogEditPage = () => {
         </Alert>
       )}
 
-      <Paper sx={{ p: 3 }}>
+      <EditPaper>
         <form onSubmit={handleSubmit}>
           <TextField
             fullWidth
@@ -141,16 +159,16 @@ export const BlogEditPage = () => {
             rows={10}
             helperText="Use Markdown para formatar o texto"
           />
-          <Box sx={{ mt: 2, display: 'flex', gap: 2 }}>
+          <EditActions>
             <Button type="submit" variant="contained" disabled={createPostMutation.isPending || updatePostMutation.isPending}>
               {createPostMutation.isPending || updatePostMutation.isPending ? 'Salvando...' : 'Salvar'}
             </Button>
             <Button variant="outlined" onClick={() => navigate('/blog')}>
               Cancelar
             </Button>
-          </Box>
+          </EditActions>
         </form>
-      </Paper>
-    </Box>
+      </EditPaper>
+    </EditWrapper>
   );
 };

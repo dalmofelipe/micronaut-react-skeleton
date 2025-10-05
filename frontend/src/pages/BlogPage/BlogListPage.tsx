@@ -1,6 +1,25 @@
-import { Box, Typography, Card, CardContent, CardActionArea, Grid, CircularProgress, Button } from "@mui/material";
+import { Box, Typography, Card, CardContent, CardActionArea, Grid, CircularProgress, Button, styled } from "@mui/material";
 import { Link } from "react-router-dom";
 import { getAllPosts } from "../../services/usePostService";
+
+const ListWrapper = styled(Box)`
+  padding: 24px;
+  max-width: 1024px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+`;
+
+const ListHeader = styled('div')`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+`;
+
+const EmptyText = styled(Typography)`
+  margin-top: 24px;
+`;
 
 export const BlogListPage = () => {
   const { allPosts, isLoadingAllPosts } = getAllPosts();
@@ -13,16 +32,18 @@ export const BlogListPage = () => {
     );
   }
 
+
   return (
-    <Box sx={{ p: 3, maxWidth: 1024, width: '100%', mx: 'auto' }}>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+    <ListWrapper>
+      <ListHeader>
         <Typography variant="h4" component="h1">
           Blog Posts
         </Typography>
         <Button variant="contained" component={Link} to="/blog/new">
           Novo Post
         </Button>
-      </Box>
+      </ListHeader>
+
       <Grid container spacing={3}>
         {allPosts?.map((post: any) => (
           <Grid size={{ xs: 12, sm: 6, md: 4 }} key={post.id}>
@@ -42,10 +63,8 @@ export const BlogListPage = () => {
         ))}
       </Grid>
       {(!allPosts || allPosts.length === 0) && (
-        <Typography variant="body1" sx={{ mt: 3 }}>
-          No posts available.
-        </Typography>
+        <EmptyText variant="body1">No posts available.</EmptyText>
       )}
-    </Box>
+    </ListWrapper>
   );
 };
