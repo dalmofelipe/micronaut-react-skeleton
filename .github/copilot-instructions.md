@@ -1,37 +1,39 @@
-# Copilot Instructions – RIPER Adaptation
+# Copilot Instructions - Framework RIPER
 
-## Framework Phases
+## Fase Atual: `/research`
 
-1. **/research** – Analisar código existente e dependências.
-2. **/innovate** – Propor melhorias, novas abordagens ou padrões.
-3. **/plan** – Especificar o plano técnico detalhado antes de qualquer modificação.
-4. **/execute** – Implementar conforme o plano aprovado.
-5. **/review** – Verificar o que foi feito, validar contra requisitos.
+> **IMPORTANTE**: Sempre opere dentro da fase atual. Não avance para a próxima fase sem confirmação explícita.
 
-## Rules
+## Framework RIPER - Fluxo de Trabalho
 
-- Nunca modifique código fora do escopo da fase atual.
-- Sempre explique o raciocínio técnico antes de sugerir código.
-- Priorize consistência e clareza no histórico de commits.
-- Em caso de dúvida, pergunte qual fase está ativa.
-- De preferencia responda em português quando possivel. 
+| Fase | Comando | Objetivo | Ações Permitidas |
+|------|---------|----------|-----------------|
+| **1. Research** | `/research` | Analisar código e contexto | Ler código, fazer perguntas, entender arquitetura |
+| **2. Innovate** | `/innovate` | Propor melhorias | Sugerir abordagens, padrões, tecnologias alternativas |
+| **3. Plan** | `/plan` | Detalhar implementação | Criar roadmap técnico detalhado, listar arquivos a modificar |
+| **4. Execute** | `/execute` | Implementar conforme plano | Codificar segundo especificações aprovadas |
+| **5. Review** | `/review` | Validar resultados | Verificar implementação, testar, validar requisitos |
 
-## Modo Pergunta (Ask Mode)
+## Regras Principais
 
-- Faça perguntas específicas para entender melhor o contexto e as necessidades do usuário.
+1. **Escopo**: Nunca modifique código fora da fase atual
+2. **Fundamentação**: Sempre explique seu raciocínio técnico antes de sugerir código
+3. **Clareza**: Priorize código legível e mantenha consistência com o estilo do projeto
+4. **Idioma**: Responda em português a menos que solicitado em outro idioma
+5. **Código Limpo**: Não insira comentários no código implementado
 
-## Modo Agent (Agent Mode)
+## Comandos de Modo
 
-- Siga rigorosamente as fases do framework.
-- Sempre peça confirmação antes de avançar para a próxima fase.
-- Preste atenção ao contexto do projeto e adapte as sugestões conforme necessário.
-- Mantenha o foco na fase atual e evite desviar para outras fases sem autorização.
-- Ao executar comandos, avalie se o terminal ativo já está sendo usado. Caso negativo, utilize o terminal ativo. Caso positivo, abra um novo terminal.
+- `/ask`: Entre no modo de perguntas para entender melhor o contexto (faça perguntas específicas e focadas)
+- `/agent`: Entre no modo de execução seguindo rigorosamente as fases do framework
 
-## Codigo
+## Boas Práticas
 
-- Nunca insira comentarios no codigo implementado
+- Avalie se um terminal já está em uso antes de executar comandos
+- Antes de implementar qualquer solução, valide seu entendimento do problema
+- Quando em dúvida sobre a fase atual, pergunte antes de prosseguir
+- Adapte suas sugestões ao contexto do projeto e tecnologias utilizadas
+- Divida tarefas complexas em etapas menores verificáveis
+- Documente decisões técnicas importantes e trade-offs considerados
 
-## Current Phase
-
-`RESEARCH` (atualize manualmente)
+> Atualize a Fase Atual manualmente quando instruído para avançar no workflow

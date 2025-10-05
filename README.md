@@ -1,75 +1,111 @@
-## Skeleton Micronaut React
+# Micronaut React Skeleton
+
+Este projeto é um skeleton moderno e completo para desenvolvimento full-stack, combinando Micronaut no backend e React no frontend. Inclui um sistema de blog funcional com suporte a Markdown.
+
+## Executando o Projeto
 
 ### Backend
 
-    #bash
-    export FRONTEND_URL=http://localhost:5173 && \
-        mvn clean mn:run -Dmicronaut.test.resources.enabled=false
+```bash
+# Bash
+export FRONTEND_URL=http://localhost:5173 && \
+    mvn clean mn:run -Dmicronaut.test.resources.enabled=false
 
-    #powershell
-    $env:FRONTEND_URL="http://localhost:5173"; mvn clean mn:run -Dmicronaut.test.resources.enabled=false
+# PowerShell
+$env:FRONTEND_URL="http://localhost:5173"; mvn clean mn:run -Dmicronaut.test.resources.enabled=false
+```
 
 ### Frontend
 
-    npm run dev
+```bash
+npm run dev
+```
 
-### Blog System
+## Sistema de Blog com Suporte a Markdown
 
-O projeto agora inclui um sistema de blog simplificado com suporte a Markdown:
+O projeto implementa um sistema de blog completo com:
 
-- **Backend**: API REST para posts com campos title, slug, content (Markdown), createdAt, updatedAt
-- **Frontend**: Páginas para listar posts (/blog) e visualizar individual (/blog/:slug) com renderização Markdown
-- **Tecnologias**: React Markdown, Material-UI, React Query
+- **API REST**: Endpoints para gerenciar posts (listar, criar, atualizar, deletar)
+- **Entidade BlogPost**: Com campos `id`, `title`, `slug`, `content` (Markdown), `createdAt`, `updatedAt`
+- **Navegação**: Páginas para listar posts (`/blog`), visualizar post (`/blog/:slug`), criar (`/blog/new`) e editar (`/blog/edit/:slug`)
+- **Editor Markdown**: Suporte completo para edição e visualização de Markdown
+- **Migrações**: Scripts Flyway para criação e manutenção das tabelas no banco de dados
 
-Para testar:
-1. Inicie o frontend: `npm run dev`
-2. Acesse http://localhost:5173/blog para ver a lista de posts
-3. Use Postman para criar posts via POST /posts com JSON contendo title, slug, content
+### Funcionalidades do Blog
 
-## Tecnologias Utilizadas
+- **Criação de Posts**: Interface amigável com editor Markdown integrado
+- **Visualização**: Renderização de Markdown com `react-markdown` e suporte a GFM (GitHub Flavored Markdown)
+- **Slugs**: Geração automática de slugs amigáveis para URL a partir do título
+- **Validação**: Controle de tamanho do conteúdo e validação de campos obrigatórios
+- **Salvamento Automático**: Rascunhos são salvos automaticamente no localStorage durante a edição
+
+## Arquitetura e Tecnologias
 
 ### Backend (Java/Micronaut)
-- **Framework Principal**: Micronaut 4.8.2
+
+- **Framework**: Micronaut 4.8.2 (com suporte a Project Reactor para programação reativa)
 - **Linguagem**: Java 21
-- **Build Tool**: Maven
-- **Banco de Dados**:
-  - PostgreSQL (produção, via Flyway migrations)
-  - H2 (testes, in-memory)
-- **ORM**: JPA/Hibernate com Micronaut Data JDBC
-- **Serialização**: Jackson (via Micronaut Serde)
-- **Validação**: Jakarta Validation API
-- **HTTP Server**: Netty
-- **Reatividade**: Project Reactor
-- **Migrações**: Flyway
-- **Logging**: Logback
-- **Testes**: JUnit 5, Mockito, AssertJ
-- **Outros**: Lombok (anotações), OpenAPI (documentação), CORS habilitado
+- **Persistência**:
+  - Micronaut Data JDBC para acesso a dados
+  - PostgreSQL em produção com Flyway para migrations
+  - H2 em memória para desenvolvimento e testes
+- **API**: REST com validação Jakarta, serialização Jackson e documentação OpenAPI
+- **Segurança**: CORS configurado para permitir requisições do frontend
 
 ### Frontend (React/TypeScript)
-- **Framework**: React 19.1.0
-- **Linguagem**: TypeScript 5.8.3
-- **Build Tool**: Vite 6.3.5
-- **UI Library**: Material-UI (MUI) 7.1.1 com Emotion
+
+- **Framework**: React 19.1.0 com TypeScript 5.8.3
+- **Build**: Vite 6.3.5
+- **UI**: Material-UI 7.1.1 com suporte a temas claro/escuro
+- **Estado**:
+  - Zustand 5.0.5 para gerenciamento de estado global
+  - TanStack React Query 5.80.6 para gerenciamento de estado servidor
 - **Roteamento**: React Router DOM 7.6.2
-- **Estado**: Zustand 5.0.5
-- **Data Fetching**: TanStack React Query 5.80.6
-- **HTTP Client**: Axios 1.9.0
-- **Testes**: Jest 29.7.0 com Testing Library
-- **Linting**: ESLint 9.25.0 com TypeScript ESLint
-- **Configuração**: TSConfig com modo estrito, JSX react-jsx, target ES2020
+- **Markdown**: React Markdown com suporte a GitHub Flavored Markdown (GFM)
+- **Editor**: @uiw/react-md-editor com preview em tempo real
+- **HTTP**: Axios 1.9.0 para comunicação com a API
 
-### Arquitetura Geral
-- **Padrão**: Full-stack com separação clara entre backend (API REST) e frontend (SPA)
-- **Comunicação**: Backend expõe API via Micronaut, frontend consome via Axios/React Query
-- **Estado**: Gerenciado no frontend com Zustand
-- **Tema/UI**: Material-UI com suporte a temas customizados
-- **CORS**: Configurado para permitir requisições do frontend (porta 5000 por padrão)
+## Estrutura de Pastas
 
-### Observações da Validação
-- O projeto está configurado para desenvolvimento local com H2 e produção com PostgreSQL
-- Build do frontend foi executado com sucesso (npm install)
-- Backend tem dependências para AOT compilation (GraalVM) mas desabilitado
-- Estrutura de pastas segue convenções padrão para ambos os frameworks
-- Testes configurados em ambos os lados
+### Backend
 
-Essa validação confirma que o projeto é um skeleton moderno e bem-configurado para desenvolvimento full-stack com tecnologias atuais e estáveis.
+```
+backend/
+├── src/
+│   ├── main/
+│   │   ├── java/mn_react/
+│   │   │   ├── controllers/     # Controladores REST
+│   │   │   ├── entities/        # Entidades JPA
+│   │   │   ├── repositories/    # Repositórios de dados
+│   │   │   └── services/        # Lógica de negócio
+│   │   └── resources/
+│   │       ├── application.yml  # Configuração Micronaut
+│   │       └── db/migration/    # Scripts Flyway
+│   └── test/                    # Testes unitários e de integração
+```
+
+### Frontend
+
+```
+frontend/
+├── public/              # Ativos estáticos
+├── src/
+│   ├── assets/          # Imagens e recursos
+│   ├── components/      # Componentes reutilizáveis
+│   │   └── MarkdownRenderer/  # Renderizador de Markdown customizado
+│   ├── layouts/         # Layouts da aplicação
+│   ├── pages/           # Componentes de página
+│   │   └── BlogPage/    # Páginas relacionadas ao blog
+│   ├── services/        # Serviços para API
+│   └── store/           # Gerenciamento de estado global
+```
+
+## Particularidades Técnicas
+
+- **Migrations Banco de Dados**: Suporte a colunas TEXT para conteúdo longo em Markdown
+- **Renderização Markdown**: Componente personalizado com estilos Material-UI
+- **Tema Adaptativo**: Alternância entre temas claro e escuro, persistente entre sessões
+- **React Query**: Cache e invalidação inteligente para otimizar requisições à API
+- **TypeScript**: Configurado com modo estrito para maior segurança de tipos
+
+Este projeto oferece uma base robusta e moderna para desenvolvimento full-stack com as mais recentes tecnologias Java e JavaScript.
