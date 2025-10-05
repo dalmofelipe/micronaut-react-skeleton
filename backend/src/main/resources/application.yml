@@ -15,15 +15,15 @@ micronaut:
       configurations:
         ui:
           allowed-origins:
-            - ${ FRONTEND_URL:`http://localhost:5000` }
+            - ${FRONTEND_URL:`http://localhost:5000`}
 datasources:
   default:
-    url: ${ JDBC_URL:`jdbc:h2:mem:testedb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE` }
+    url: ${JDBC_URL:`jdbc:h2:mem:testedb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE`}
     driver-class-name: ${JDBC_DRIVER:org.h2.Driver}
-    dialect: ${ JDBC_DIALECT:H2 }
-    db-type: ${ JDBC_DB_TYPE:postgres }
-    username: ${ JDBC_USERNAME:sa }
-    password: ${ JDBC_PASSWORD:"" }
+    dialect: ${JDBC_DIALECT:H2}
+    db-type: ${JDBC_DB_TYPE:postgres}
+    username: ${JDBC_USERNAME:sa}
+    password: ${JDBC_PASSWORD:""}
     schema-generate: CREATE_DROP
 flyway:
   datasources:

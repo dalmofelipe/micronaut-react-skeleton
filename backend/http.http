@@ -1,0 +1,9 @@
+POST /posts HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+
+{
+  "title": "Engenharia de Computaria",
+  "slug": "eng-comp32",
+  "content": "# Engenharia de Computaria\n### lorem ipsum dolor sit amet. consectetur adipiscing elit."
+}

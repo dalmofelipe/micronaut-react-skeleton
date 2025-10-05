@@ -22,6 +22,7 @@
     <micronaut.runtime>netty</micronaut.runtime>
     <micronaut.test.resources.enabled>true</micronaut.test.resources.enabled>
     <exec.mainClass>mn_react.Application</exec.mainClass>
+    <lombok.version>1.18.30</lombok.version>
   </properties>
 
   <repositories>

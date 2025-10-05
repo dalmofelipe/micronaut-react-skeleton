@@ -1,6 +1,5 @@
 import { Box, styled } from "@mui/material"
 import { Outlet } from "react-router-dom"
-import { Header } from "./components/Header"
 
 const DefaultLayoutWrapper = styled(Box)`
   display: flex;
@@ -15,8 +14,6 @@ const DefaultLayoutWrapper = styled(Box)`
 export const DefaultLayout = () => {
   return (
     <DefaultLayoutWrapper>
-      <Header />
-
       <Outlet />
     </DefaultLayoutWrapper>
   )
