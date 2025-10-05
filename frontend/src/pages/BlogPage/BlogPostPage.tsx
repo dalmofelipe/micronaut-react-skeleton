@@ -55,8 +55,8 @@ export const BlogPostPage = () => {
       <HeaderBox>
         <TitleGroup>
           <IconButton
-            onClick={() => navigate(-1)}
-            aria-label="Voltar"
+            onClick={() => navigate('/blog')}
+            aria-label="Voltar para Blog"
             sx={{
               bgcolor: 'primary.main',
               color: 'primary.contrastText',

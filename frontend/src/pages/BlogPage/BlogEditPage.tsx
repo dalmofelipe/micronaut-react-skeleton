@@ -1,4 +1,4 @@
-import { Box, Typography, TextField, Button, Paper, CircularProgress, Alert, styled, ToggleButtonGroup, ToggleButton } from "@mui/material";
+import { Box, Typography, TextField, Button, Paper, CircularProgress, Alert, styled } from "@mui/material";
 import MDEditor from '@uiw/react-md-editor';
 import '../../styles/md-editor.css';
 import { useThemeStore } from '../../store/useThemeStore';
@@ -35,8 +35,6 @@ export const BlogEditPage = () => {
   const { post, isLoadingPost } = isNew ? { post: null, isLoadingPost: false } : getPostBySlug(slug!);
   const createPostMutation = useCreatePost();
   const updatePostMutation = useUpdatePost();
-
-  const [modeView, setModeView] = useState<'editor'|'preview'|'split'>('editor');
 
   const [title, setTitle] = useState('');
   const [slugValue, setSlugValue] = useState('');
@@ -124,10 +122,6 @@ export const BlogEditPage = () => {
     }
   };
 
-  const handleModeChange = (_: any, val: 'editor'|'preview'|'split') => {
-    if (val) setModeView(val);
-  }
-
   const handleSlugChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newSlug = e.target.value;
     setSlugValue(newSlug.toLowerCase().replace(/[^a-z0-9-]/g, '').replace(/-+/g, '-').replace(/^-|-$/g, ''));
@@ -184,20 +178,13 @@ export const BlogEditPage = () => {
             <Typography variant="subtitle1" gutterBottom>
               Conteúdo (Markdown)
             </Typography>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-                  <ToggleButtonGroup value={modeView} exclusive onChange={handleModeChange} size="small">
-                    <ToggleButton value="editor">Editor</ToggleButton>
-                    <ToggleButton value="split">Split</ToggleButton>
-                    <ToggleButton value="preview">Preview</ToggleButton>
-                  </ToggleButtonGroup>
-                </Box>
-
+                
                 <div data-color-mode={mode} className={mode === 'dark' ? 'md-editor-transition' : ''}>
                   <MDEditor
                     value={content}
                     onChange={(val) => setContent(val ?? '')}
                     height={400}
-                    preview={modeView === 'preview' ? 'preview' : modeView === 'split' ? 'live' : 'edit'}
+                    preview="live"
                   />
                 </div>
               <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 1 }}>
