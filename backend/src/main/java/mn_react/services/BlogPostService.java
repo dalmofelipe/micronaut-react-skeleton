@@ -40,9 +40,13 @@ public class BlogPostService {
     public Optional<BlogPost> updatePost(Long id, BlogPost post) {
         Optional<BlogPost> existingPost = blogPostRepository.findById(id);
         if (existingPost.isPresent()) {
-            post.setId(id);
-            post.setUpdatedAt(LocalDateTime.now());
-            return Optional.of(blogPostRepository.update(post));
+            BlogPost existing = existingPost.get();
+            // Merge allowed updatable fields from incoming post and preserve createdAt
+            existing.setTitle(post.getTitle());
+            existing.setSlug(post.getSlug());
+            existing.setContent(post.getContent());
+            existing.setUpdatedAt(LocalDateTime.now());
+            return Optional.of(blogPostRepository.update(existing));
         }
         return Optional.empty();
     }

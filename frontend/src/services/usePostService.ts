@@ -53,7 +53,11 @@ export const useCreatePost = () => {
       return response.data;
     },
     onSuccess: () => {
+      // Invalidate the posts list and any single-post slug queries so the UI refreshes
       queryClient.invalidateQueries({ queryKey: ['post-all'] });
+      queryClient.invalidateQueries({
+        predicate: (query) => Array.isArray(query.queryKey) && query.queryKey[0] === 'post-by-slug'
+      });
     },
   });
 }
@@ -66,7 +70,11 @@ export const useUpdatePost = () => {
       return response.data;
     },
     onSuccess: () => {
+      // Invalidate list and single-post slug caches so updated content shows immediately
       queryClient.invalidateQueries({ queryKey: ['post-all'] });
+      queryClient.invalidateQueries({
+        predicate: (query) => Array.isArray(query.queryKey) && query.queryKey[0] === 'post-by-slug'
+      });
     },
   });
 }
