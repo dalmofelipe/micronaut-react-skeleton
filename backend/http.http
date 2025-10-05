@@ -4,6 +4,6 @@ Content-Type: application/json
 
 {
   "title": "Engenharia de Computaria",
-  "slug": "eng-comp32",
+  "slug": "eng-comp23",
   "content": "# Engenharia de Computaria\n### lorem ipsum dolor sit amet. consectetur adipiscing elit."
 }
