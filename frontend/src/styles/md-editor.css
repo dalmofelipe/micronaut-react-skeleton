@@ -1,0 +1,141 @@
+[data-color-mode="dark"] .w-md-editor,
+[data-color-mode="dark"] .w-md-editor *,
+[data-color-mode="dark"] .w-md-editor .cm-editor,
+[data-color-mode="dark"] .w-md-editor .cm-content,
+[data-color-mode="dark"] .w-md-editor .cm-line,
+[data-color-mode="dark"] .w-md-editor .cm-scroller,
+[data-color-mode="dark"] .w-md-editor textarea,
+[data-color-mode="dark"] .w-md-editor .ProseMirror,
+[data-color-mode="dark"] .w-md-editor .wmde-markdown,
+[data-color-mode="dark"] .w-md-editor .wmde-markdown-preview {
+  color: #e6eef8 !important;
+  background-color: transparent !important;
+  caret-color: #e6eef8 !important;
+}
+
+/* Selection color */
+[data-color-mode="dark"] .w-md-editor ::selection {
+  background: rgba(230,238,248,0.16) !important;
+}
+
+/* Placeholder and hint texts */
+[data-color-mode="dark"] .w-md-editor ::-webkit-input-placeholder,
+[data-color-mode="dark"] .w-md-editor ::-moz-placeholder,
+[data-color-mode="dark"] .w-md-editor ::-ms-input-placeholder,
+[data-color-mode="dark"] .w-md-editor ::placeholder {
+  color: rgba(230,238,248,0.6) !important;
+}
+
+/* If some elements still have explicit inline color, try to override common attributes */
+[data-color-mode="dark"] .w-md-editor [style*="color"] {
+  color: #e6eef8 !important;
+}
+
+/* Dark theme overrides for @uiw/react-md-editor */
+[data-color-mode="dark"] .w-md-editor {
+  background: #0b1220 !important;
+  color: #e6eef8 !important;
+  border-radius: 8px;
+}
+
+[data-color-mode="dark"] .w-md-editor-toolbar {
+  background: rgba(255,255,255,0.03) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.04) !important;
+}
+
+[data-color-mode="dark"] .w-md-editor-toolbar button {
+  padding: 6px !important;
+  margin: 2px !important;
+  border-radius: 6px !important;
+}
+
+[data-color-mode="dark"] .w-md-editor-toolbar button svg,
+[data-color-mode="dark"] .w-md-editor-toolbar button .wmde-icon {
+  width: 20px !important;
+  height: 20px !important;
+  stroke-width: 1.5 !important;
+}
+
+[data-color-mode="dark"] .wmde-markdown, 
+[data-color-mode="dark"] .wmde-markdown-preview {
+  background: transparent !important;
+  color: #e6eef8 !important;
+}
+
+/* Make the textarea/preview surfaces darker */
+[data-color-mode="dark"] .w-md-editor-text-input,
+[data-color-mode="dark"] .wmde-markdown-preview {
+  background: #071018 !important;
+  color: #dbeafe !important;
+}
+
+/* Ensure editor typing area and preview use readable color in dark mode */
+[data-color-mode="dark"] .w-md-editor-text-input,
+[data-color-mode="dark"] .wmde-markdown,
+[data-color-mode="dark"] .wmde-markdown-preview,
+[data-color-mode="dark"] .cm-content,
+[data-color-mode="dark"] .CodeMirror-cursor {
+  color: #e6eef8 !important;
+}
+
+/* Contador de caracteres com melhor visibilidade */
+.MuiTypography-caption[aria-live="polite"] {
+  font-weight: 500;
+}
+
+/* Additional strong overrides to catch CodeMirror 6 structure and editor internals */
+[data-color-mode="dark"] .w-md-editor .cm-editor,
+[data-color-mode="dark"] .w-md-editor .cm-content,
+[data-color-mode="dark"] .w-md-editor .cm-line,
+[data-color-mode="dark"] .w-md-editor .cm-scroller,
+[data-color-mode="dark"] .w-md-editor textarea,
+[data-color-mode="dark"] .w-md-editor .ProseMirror,
+[data-color-mode="dark"] .w-md-editor .wmde-markdown,
+[data-color-mode="dark"] .w-md-editor .wmde-markdown-preview {
+  color: #e6eef8 !important;
+}
+
+[data-color-mode="dark"] .w-md-editor .cm-editor .cm-content span {
+  color: #e6eef8 !important;
+}
+
+[data-color-mode="dark"] .w-md-editor .cm-editor .cm-cursor {
+  border-left-color: #e6eef8 !important;
+}
+
+/* Light mode: ensure dark text on light background */
+[data-color-mode="light"] .w-md-editor-text-input,
+[data-color-mode="light"] .wmde-markdown,
+[data-color-mode="light"] .wmde-markdown-preview,
+[data-color-mode="light"] .cm-content {
+  color: #0b1220 !important;
+}
+
+/* Estilo dos botões da barra de ferramentas */
+[data-color-mode="dark"] .w-md-editor-toolbar button,
+[data-color-mode="light"] .w-md-editor-toolbar button {
+  border-radius: 6px !important;
+}
+
+/* Make headings and code blocks more legible */
+.w-md-editor .wmde-markdown h1,
+.w-md-editor .wmde-markdown h2,
+.w-md-editor .wmde-markdown h3 {
+  font-weight: 600;
+}
+
+/* Slight hover effect for toolbar buttons */
+[data-color-mode="dark"] .w-md-editor-toolbar button:hover {
+  background: rgba(255,255,255,0.04) !important;
+  box-shadow: 0 2px 8px rgba(2,6,23,0.6);
+}
+
+/* Smooth transition when theme changes */
+.md-editor-transition .w-md-editor, .md-editor-transition .wmde-markdown, .md-editor-transition .wmde-markdown-preview {
+  transition: background-color 220ms ease, color 220ms ease;
+}
+
+/* Near limit warning */
+.w-md-editor .md-limit-warning {
+  color: #ffb020;
+}

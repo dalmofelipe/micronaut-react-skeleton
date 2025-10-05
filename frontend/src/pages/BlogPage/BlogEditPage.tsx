@@ -1,4 +1,7 @@
-import { Box, Typography, TextField, Button, Paper, CircularProgress, Alert, styled } from "@mui/material";
+import { Box, Typography, TextField, Button, Paper, CircularProgress, Alert, styled, ToggleButtonGroup, ToggleButton } from "@mui/material";
+import MDEditor from '@uiw/react-md-editor';
+import '../../styles/md-editor.css';
+import { useThemeStore } from '../../store/useThemeStore';
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getPostBySlug, useCreatePost, useUpdatePost } from "../../services/usePostService";
@@ -33,10 +36,13 @@ export const BlogEditPage = () => {
   const createPostMutation = useCreatePost();
   const updatePostMutation = useUpdatePost();
 
+  const [modeView, setModeView] = useState<'editor'|'preview'|'split'>('editor');
+
   const [title, setTitle] = useState('');
   const [slugValue, setSlugValue] = useState('');
   const [content, setContent] = useState('');
   const [error, setError] = useState('');
+  const mode = useThemeStore((s) => s.mode);
 
   useEffect(() => {
     if (post) {
@@ -44,7 +50,24 @@ export const BlogEditPage = () => {
       setSlugValue(post.slug);
       setContent(post.content);
     }
+    // try to restore autosaved draft for this slug/new
+    const key = isNew ? 'post-draft-new' : `post-draft-${slug}`;
+    const draft = localStorage.getItem(key);
+    if (!post && draft) {
+      setContent(draft);
+    }
   }, [post]);
+
+  // autosave draft to localStorage
+  useEffect(() => {
+    const key = isNew ? 'post-draft-new' : `post-draft-${slug}`;
+    const handle = setTimeout(() => {
+      if (content && content.length > 0) {
+        localStorage.setItem(key, content);
+      }
+    }, 800);
+    return () => clearTimeout(handle);
+  }, [content, slug, isNew]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,6 +75,11 @@ export const BlogEditPage = () => {
 
     if (!title.trim() || !slugValue.trim() || !content.trim()) {
       setError('Todos os campos são obrigatórios');
+      return;
+    }
+
+    if (content.length > 4000) {
+      setError('Conteúdo excede o limite de 4000 caracteres');
       return;
     }
 
@@ -95,6 +123,10 @@ export const BlogEditPage = () => {
       setSlugValue(generateSlug(newTitle));
     }
   };
+
+  const handleModeChange = (_: any, val: 'editor'|'preview'|'split') => {
+    if (val) setModeView(val);
+  }
 
   const handleSlugChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newSlug = e.target.value;
@@ -148,17 +180,38 @@ export const BlogEditPage = () => {
             required
             helperText="URL amigável do post (apenas letras minúsculas, números e hífens)"
           />
-          <TextField
-            fullWidth
-            label="Conteúdo (Markdown)"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            margin="normal"
-            required
-            multiline
-            rows={10}
-            helperText="Use Markdown para formatar o texto"
-          />
+          <Box sx={{ mt: 2 }}>
+            <Typography variant="subtitle1" gutterBottom>
+              Conteúdo (Markdown)
+            </Typography>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                  <ToggleButtonGroup value={modeView} exclusive onChange={handleModeChange} size="small">
+                    <ToggleButton value="editor">Editor</ToggleButton>
+                    <ToggleButton value="split">Split</ToggleButton>
+                    <ToggleButton value="preview">Preview</ToggleButton>
+                  </ToggleButtonGroup>
+                </Box>
+
+                <div data-color-mode={mode} className={mode === 'dark' ? 'md-editor-transition' : ''}>
+                  <MDEditor
+                    value={content}
+                    onChange={(val) => setContent(val ?? '')}
+                    height={400}
+                    preview={modeView === 'preview' ? 'preview' : modeView === 'split' ? 'live' : 'edit'}
+                  />
+                </div>
+              <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 1 }}>
+                Use Markdown para formatar o texto
+              </Typography>
+              <Typography
+                variant="caption"
+                display="block"
+                sx={{ mt: 0.5, color: content.length > 4000 ? 'error.main' : content.length > 3200 ? 'warning.main' : 'text.secondary' }}
+                aria-live="polite"
+              >
+                {content.length} / 4000 caracteres
+              </Typography>
+          </Box>
           <EditActions>
             <Button type="submit" variant="contained" disabled={createPostMutation.isPending || updatePostMutation.isPending}>
               {createPostMutation.isPending || updatePostMutation.isPending ? 'Salvando...' : 'Salvar'}

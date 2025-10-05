@@ -14,6 +14,7 @@
 - Sempre explique o raciocínio técnico antes de sugerir código.
 - Priorize consistência e clareza no histórico de commits.
 - Em caso de dúvida, pergunte qual fase está ativa.
+- De preferencia responda em português quando possivel. 
 
 ## Modo Pergunta (Ask Mode)
 
