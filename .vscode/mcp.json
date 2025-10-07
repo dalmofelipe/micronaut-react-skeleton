@@ -4,7 +4,7 @@
       "command": "npx",
       "args": ["-y", "@allpepper/memory-bank-mcp"],
       "env": {
-        "MEMORY_BANK_ROOT": "<path-to-bank>"
+        "MEMORY_BANK_ROOT": ".cursor"
       },
       "disabled": false,
       "autoApprove": [
@@ -24,9 +24,9 @@
       "command": "npx",
       "args": [
         "chrome-devtools-mcp@latest",
-        "--channel=canary",
-        "--headless=true",
-        "--isolated=true"
+        "--channel=stable",
+        "--headless=false",
+        "--isolated=false"
       ]
     }
   },

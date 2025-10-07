@@ -1,0 +1,297 @@
+### Advanced Authentication Test Scenarios
+### Micronaut React Skeleton - Extended Testing
+### Base URL: http://localhost:8080
+
+@baseUrl = http://localhost:8080
+@contentType = application/json
+
+### ===========================================
+### A. Complete Authentication Flow Test
+### ===========================================
+
+### Step 1: Register a new user
+# @name registerFlow
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "email": "flow-test@example.com",
+  "password": "flowtest123",
+  "name": "Flow Test User"
+}
+
+### Step 2: Login with the newly registered user
+@registerToken = {{registerFlow.response.body.token}}
+
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "flow-test@example.com",
+  "password": "flowtest123"
+}
+
+### Step 3: Access protected resource with registration token
+GET {{baseUrl}}/books
+Authorization: Bearer {{registerToken}}
+
+### ===========================================
+### B. Role-based Access Control Tests
+### ===========================================
+
+### Admin user login
+# @name adminLogin
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "admin@example.com",
+  "password": "admin123"
+}
+
+### Regular user login
+# @name userLogin
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "user@example.com",
+  "password": "user123"
+}
+
+### Test admin access
+@adminToken = {{adminLogin.response.body.token}}
+GET {{baseUrl}}/books
+Authorization: Bearer {{adminToken}}
+
+### Test regular user access
+@userToken = {{userLogin.response.body.token}}
+GET {{baseUrl}}/books
+Authorization: Bearer {{userToken}}
+
+### ===========================================
+### C. Input Validation Tests
+### ===========================================
+
+### Missing email field
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "password": "password123",
+  "name": "No Email User"
+}
+
+### Missing password field
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "email": "nopassword@example.com",
+  "name": "No Password User"
+}
+
+### Missing name field
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "email": "noname@example.com",
+  "password": "password123"
+}
+
+### Empty strings
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "email": "",
+  "password": "",
+  "name": ""
+}
+
+### Very long inputs
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "email": "very.long.email.address.that.might.exceed.normal.limits.and.cause.validation.issues@example.com",
+  "password": "this-is-a-very-long-password-that-might-exceed-normal-length-limits-and-cause-validation-issues-in-the-system",
+  "name": "This Is A Very Long Name That Might Exceed Normal Length Limits And Cause Validation Issues In The System"
+}
+
+### Special characters in name
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "email": "special@example.com",
+  "password": "special123",
+  "name": "José María Ñoño & Co. <script>alert('test')</script>"
+}
+
+### ===========================================
+### D. Security Tests
+### ===========================================
+
+### SQL Injection attempt in email
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "admin@example.com'; DROP TABLE users; --",
+  "password": "admin123"
+}
+
+### XSS attempt in name during registration
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "email": "xss-test@example.com",
+  "password": "xsstest123",
+  "name": "<script>alert('XSS')</script>"
+}
+
+### Password with special characters
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "email": "specialchars@example.com",
+  "password": "P@ssw0rd!#$%^&*()_+-=[]{}|;:,.<>?",
+  "name": "Special Chars User"
+}
+
+### ===========================================
+### E. Edge Cases and Error Handling
+### ===========================================
+
+### Malformed JSON
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "test@example.com",
+  "password": "test123"
+
+### Wrong Content-Type
+POST {{baseUrl}}/auth/login
+Content-Type: text/plain
+
+{
+  "email": "admin@example.com",
+  "password": "admin123"
+}
+
+### Large payload
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "email": "large@example.com",
+  "password": "large123",
+  "name": "A".repeat(10000)
+}
+
+### Null values
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "email": null,
+  "password": null,
+  "name": null
+}
+
+### ===========================================
+### F. Performance and Load Tests
+### ===========================================
+
+### Rapid successive registrations
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "email": "perf1@example.com",
+  "password": "perf123",
+  "name": "Performance Test 1"
+}
+
+###
+
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "email": "perf2@example.com",
+  "password": "perf123",
+  "name": "Performance Test 2"
+}
+
+###
+
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "email": "perf3@example.com",
+  "password": "perf123",
+  "name": "Performance Test 3"
+}
+
+### ===========================================
+### G. JWT Token Lifecycle Tests
+### ===========================================
+
+### Get fresh token
+# @name freshLogin
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "admin@example.com",
+  "password": "admin123"
+}
+
+### Use token immediately
+@freshToken = {{freshLogin.response.body.token}}
+GET {{baseUrl}}/books
+Authorization: Bearer {{freshToken}}
+
+### Simulate token tampering
+GET {{baseUrl}}/books
+Authorization: Bearer {{freshToken}}modified
+
+### Use token with wrong format
+GET {{baseUrl}}/books
+Authorization: Bearer not.a.jwt.token
+
+### Use empty token
+GET {{baseUrl}}/books
+Authorization: Bearer 
+
+### ===========================================
+### H. CORS and Headers Tests
+### ===========================================
+
+### Test with different origins
+POST {{baseUrl}}/auth/login
+Origin: http://localhost:3000
+Content-Type: {{contentType}}
+
+{
+  "email": "admin@example.com",
+  "password": "admin123"
+}
+
+### Test with custom headers
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+X-Custom-Header: test-value
+User-Agent: REST-Client-Test
+
+{
+  "email": "admin@example.com",
+  "password": "admin123"
+}

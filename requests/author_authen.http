@@ -1,0 +1,210 @@
+### Authentication API Test Requests
+### Micronaut React Skeleton - JWT Authentication System
+### Base URL: http://localhost:8080
+
+@baseUrl = http://localhost:8080
+@contentType = application/json
+
+### ===========================================
+### 1. Test endpoint - Verify API is working
+### ===========================================
+GET {{baseUrl}}/auth/test
+
+### ===========================================
+### 2. Register new user
+### ===========================================
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "email": "testuser@example.com",
+  "password": "password123",
+  "name": "Test User"
+}
+
+### ===========================================
+### 3. Login with default admin user
+### ===========================================
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "admin@example.com",
+  "password": "admin123"
+}
+
+### ===========================================
+### 4. Login with default regular user
+### ===========================================
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "user@example.com",
+  "password": "user123"
+}
+
+### ===========================================
+### 5. Login with newly registered user
+### ===========================================
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "testuser@example.com",
+  "password": "password123"
+}
+
+### ===========================================
+### 6. Test invalid login credentials
+### ===========================================
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "invalid@example.com",
+  "password": "wrongpassword"
+}
+
+### ===========================================
+### 7. Test registration with existing email
+### ===========================================
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "email": "admin@example.com",
+  "password": "newpassword123",
+  "name": "Duplicate Admin"
+}
+
+### ===========================================
+### 8. Test registration with invalid email
+### ===========================================
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "email": "invalid-email",
+  "password": "password123",
+  "name": "Invalid Email User"
+}
+
+### ===========================================
+### 9. Test registration with short password
+### ===========================================
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "email": "shortpass@example.com",
+  "password": "123",
+  "name": "Short Password User"
+}
+
+### ===========================================
+### 10. Access protected books endpoint without token
+### ===========================================
+GET {{baseUrl}}/books
+
+### ===========================================
+### 11. Access protected books endpoint with valid token
+### First login to get token, then use it below
+### ===========================================
+
+# Step 1: Login to get token
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "admin@example.com",
+  "password": "admin123"
+}
+
+###
+
+# Step 2: Use the token from login response
+@token = {{login.response.body.token}}
+
+GET {{baseUrl}}/books
+Authorization: Bearer {{token}}
+
+### ===========================================
+### 12. Test JWT token validation with invalid token
+### ===========================================
+GET {{baseUrl}}/books
+Authorization: Bearer invalid-jwt-token-here
+
+### ===========================================
+### 13. Register multiple users for testing
+### ===========================================
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "email": "alice@example.com",
+  "password": "alice123",
+  "name": "Alice Smith"
+}
+
+###
+
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "email": "bob@example.com",
+  "password": "bob123456",
+  "name": "Bob Johnson"
+}
+
+###
+
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "email": "charlie@example.com",
+  "password": "charlie789",
+  "name": "Charlie Brown"
+}
+
+### ===========================================
+### 14. Test CORS - Options preflight request
+### ===========================================
+OPTIONS {{baseUrl}}/auth/login
+Origin: http://localhost:5173
+Access-Control-Request-Method: POST
+Access-Control-Request-Headers: Content-Type
+
+### ===========================================
+### 15. Performance test - Multiple rapid requests
+### ===========================================
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "admin@example.com",
+  "password": "admin123"
+}
+
+###
+
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "user@example.com",
+  "password": "user123"
+}
+
+###
+
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "admin@example.com",
+  "password": "admin123"
+}

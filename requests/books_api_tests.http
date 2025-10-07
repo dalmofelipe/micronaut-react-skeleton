@@ -1,0 +1,256 @@
+### Books API Test Requests
+### Testing protected endpoints with JWT authentication
+### Base URL: http://localhost:8080
+
+@baseUrl = http://localhost:8080
+@contentType = application/json
+
+### ===========================================
+### Setup: Get authentication tokens
+### ===========================================
+
+### Login as Admin
+# @name adminAuth
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "admin@example.com",
+  "password": "admin123"
+}
+
+### Login as Regular User  
+# @name userAuth
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "user@example.com",
+  "password": "user123"
+}
+
+### Extract tokens
+@adminToken = {{adminAuth.response.body.token}}
+@userToken = {{userAuth.response.body.token}}
+
+### ===========================================
+### Books Endpoint Tests
+### ===========================================
+
+### 1. Get all books without authentication (should fail)
+GET {{baseUrl}}/books
+
+### 2. Get all books with admin token
+GET {{baseUrl}}/books
+Authorization: Bearer {{adminToken}}
+
+### 3. Get all books with user token
+GET {{baseUrl}}/books
+Authorization: Bearer {{userToken}}
+
+### 4. Get all books with invalid token
+GET {{baseUrl}}/books
+Authorization: Bearer invalid-token-here
+
+### 5. Get all books with malformed Authorization header
+GET {{baseUrl}}/books
+Authorization: {{adminToken}}
+
+### 6. Get all books with expired/tampered token
+GET {{baseUrl}}/books
+Authorization: Bearer {{adminToken}}.tampered
+
+### ===========================================
+### Books CRUD Operations (if implemented)
+### ===========================================
+
+### 7. Create new book (POST) - Admin
+POST {{baseUrl}}/books
+Authorization: Bearer {{adminToken}}
+Content-Type: {{contentType}}
+
+{
+  "title": "New Test Book",
+  "pages": 250
+}
+
+### 8. Create new book (POST) - User
+POST {{baseUrl}}/books
+Authorization: Bearer {{userToken}}
+Content-Type: {{contentType}}
+
+{
+  "title": "User Created Book",
+  "pages": 180
+}
+
+### 9. Update book (PUT) - Admin
+PUT {{baseUrl}}/books/1
+Authorization: Bearer {{adminToken}}
+Content-Type: {{contentType}}
+
+{
+  "title": "Updated Book Title",
+  "pages": 500
+}
+
+### 10. Update book (PUT) - User  
+PUT {{baseUrl}}/books/1
+Authorization: Bearer {{userToken}}
+Content-Type: {{contentType}}
+
+{
+  "title": "User Updated Title",
+  "pages": 300
+}
+
+### 11. Delete book (DELETE) - Admin
+DELETE {{baseUrl}}/books/1
+Authorization: Bearer {{adminToken}}
+
+### 12. Delete book (DELETE) - User
+DELETE {{baseUrl}}/books/2
+Authorization: Bearer {{userToken}}
+
+### ===========================================
+### Individual Book Access Tests
+### ===========================================
+
+### 13. Get specific book by ID - Admin
+GET {{baseUrl}}/books/1
+Authorization: Bearer {{adminToken}}
+
+### 14. Get specific book by ID - User
+GET {{baseUrl}}/books/1
+Authorization: Bearer {{userToken}}
+
+### 15. Get non-existent book
+GET {{baseUrl}}/books/999
+Authorization: Bearer {{adminToken}}
+
+### 16. Get book with invalid ID format
+GET {{baseUrl}}/books/abc
+Authorization: Bearer {{adminToken}}
+
+### ===========================================
+### Error Handling and Edge Cases
+### ===========================================
+
+### 17. Books endpoint with OPTIONS method
+OPTIONS {{baseUrl}}/books
+Authorization: Bearer {{adminToken}}
+
+### 18. Books endpoint with HEAD method
+HEAD {{baseUrl}}/books
+Authorization: Bearer {{adminToken}}
+
+### 19. Books endpoint with wrong HTTP method
+PATCH {{baseUrl}}/books
+Authorization: Bearer {{adminToken}}
+
+### 20. Books endpoint with query parameters
+GET {{baseUrl}}/books?page=1&size=10&sort=title
+Authorization: Bearer {{adminToken}}
+
+### 21. Books endpoint with custom headers
+GET {{baseUrl}}/books
+Authorization: Bearer {{adminToken}}
+Accept: application/json
+X-Requested-With: XMLHttpRequest
+User-Agent: REST-Client-Books-Test
+
+### ===========================================
+### Concurrent Access Tests
+### ===========================================
+
+### 22. Multiple rapid requests to books endpoint
+GET {{baseUrl}}/books
+Authorization: Bearer {{adminToken}}
+
+###
+GET {{baseUrl}}/books
+Authorization: Bearer {{userToken}}
+
+###
+GET {{baseUrl}}/books
+Authorization: Bearer {{adminToken}}
+
+###
+GET {{baseUrl}}/books
+Authorization: Bearer {{userToken}}
+
+### ===========================================
+### Performance Tests
+### ===========================================
+
+### 23. Large data request simulation
+GET {{baseUrl}}/books
+Authorization: Bearer {{adminToken}}
+Accept-Encoding: gzip, deflate, br
+
+### 24. Request with timeout simulation
+GET {{baseUrl}}/books
+Authorization: Bearer {{adminToken}}
+Connection: keep-alive
+Keep-Alive: timeout=1
+
+### ===========================================
+### Security Tests for Books Endpoint
+### ===========================================
+
+### 25. SQL Injection attempt in book ID
+GET {{baseUrl}}/books/1'; DROP TABLE books; --
+Authorization: Bearer {{adminToken}}
+
+### 26. Path traversal attempt
+GET {{baseUrl}}/books/../../../etc/passwd
+Authorization: Bearer {{adminToken}}
+
+### 27. XSS attempt in query parameters
+GET {{baseUrl}}/books?search=<script>alert('xss')</script>
+Authorization: Bearer {{adminToken}}
+
+### ===========================================
+### Token Validation Edge Cases
+### ===========================================
+
+### 28. Empty Authorization header
+GET {{baseUrl}}/books
+Authorization: 
+
+### 29. Bearer without token
+GET {{baseUrl}}/books
+Authorization: Bearer
+
+### 30. Multiple Authorization headers
+GET {{baseUrl}}/books
+Authorization: Bearer {{adminToken}}
+Authorization: Bearer {{userToken}}
+
+### 31. Case-sensitive Bearer token
+GET {{baseUrl}}/books
+Authorization: bearer {{adminToken}}
+
+### 32. Authorization with extra spaces
+GET {{baseUrl}}/books
+Authorization:   Bearer   {{adminToken}}   
+
+### ===========================================
+### CORS Tests for Books Endpoint
+### ===========================================
+
+### 33. CORS preflight for books
+OPTIONS {{baseUrl}}/books
+Origin: http://localhost:5173
+Access-Control-Request-Method: GET
+Access-Control-Request-Headers: Authorization
+
+### 34. CORS actual request
+GET {{baseUrl}}/books
+Origin: http://localhost:5173
+Authorization: Bearer {{adminToken}}
+
+### 35. CORS with different origin
+GET {{baseUrl}}/books
+Origin: http://localhost:3000
+Authorization: Bearer {{adminToken}}

@@ -16,6 +16,29 @@ micronaut:
         ui:
           allowed-origins:
             - ${ FRONTEND_URL:`http://localhost:5000` }
+          allowed-headers:
+            - Content-Type
+            - Authorization
+  security:
+    authentication: bearer
+    intercept-url-map:
+      - pattern: /auth/**
+        httpMethod: POST
+        access:
+          - isAnonymous()
+      - pattern: /auth/test
+        httpMethod: GET
+        access:
+          - isAnonymous()
+    token:
+      jwt:
+        signatures:
+          secret:
+            generator:
+              secret: ${ JWT_SECRET:`mySecretKey123456789012345678901234567890` }
+        generator:
+          access-token:
+            expiration: 900 # 15 minutes
 datasources:
   default:
     url: ${ JDBC_URL:`jdbc:h2:mem:testedb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE` }
@@ -32,9 +55,9 @@ flyway:
 jpa:
   default:
     entity-scan:
-      packages: mn_react.backend.entities
+      packages: mn_react.entities
     properties:
       hibernate:
         hbm2ddl:
-          auto: update
+          auto: create-drop
         show_sql: true

@@ -1,0 +1,289 @@
+### Environment-Specific Test Configurations
+### Micronaut React Skeleton - Multi-Environment Testing
+### Switch between different environments by changing @baseUrl
+
+### ===========================================
+### Environment Variables
+### ===========================================
+
+### Local Development
+@localUrl = http://localhost:8080
+@frontendUrl = http://localhost:5173
+
+### Docker/Container
+@dockerUrl = http://localhost:8080
+@dockerFrontend = http://localhost:3000
+
+### Production (example URLs)
+@prodUrl = https://api.yourapp.com
+@prodFrontend = https://yourapp.com
+
+### Current Environment (change this)
+@baseUrl = {{localUrl}}
+@currentFrontend = {{frontendUrl}}
+@contentType = application/json
+
+### ===========================================
+### Health Check Tests
+### ===========================================
+
+### Basic health check
+GET {{baseUrl}}/health
+
+### Application info
+GET {{baseUrl}}/info
+
+### Metrics (if enabled)
+GET {{baseUrl}}/metrics
+
+### Environment-specific auth test
+GET {{baseUrl}}/auth/test
+
+### ===========================================
+### Environment-Specific Authentication Tests
+### ===========================================
+
+### Test CORS for current environment
+OPTIONS {{baseUrl}}/auth/login
+Origin: {{currentFrontend}}
+Access-Control-Request-Method: POST
+Access-Control-Request-Headers: Content-Type
+
+### Login with environment-specific CORS
+POST {{baseUrl}}/auth/login
+Origin: {{currentFrontend}}
+Content-Type: {{contentType}}
+
+{
+  "email": "admin@example.com",
+  "password": "admin123"
+}
+
+### ===========================================
+### Data Seeding Tests
+### ===========================================
+
+### Verify default admin exists
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "admin@example.com",
+  "password": "admin123"
+}
+
+### Verify default user exists
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "user@example.com",
+  "password": "user123"
+}
+
+### Verify default books exist
+# @name seedLogin
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "admin@example.com",
+  "password": "admin123"
+}
+
+###
+@seedToken = {{seedLogin.response.body.token}}
+GET {{baseUrl}}/books
+Authorization: Bearer {{seedToken}}
+
+### ===========================================
+### Configuration Validation Tests
+### ===========================================
+
+### Test JWT configuration
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "admin@example.com",
+  "password": "admin123"
+}
+
+### Test database connectivity (via books endpoint)
+GET {{baseUrl}}/books
+Authorization: Bearer {{seedToken}}
+
+### Test CORS configuration
+POST {{baseUrl}}/auth/login
+Origin: {{currentFrontend}}
+Content-Type: {{contentType}}
+
+{
+  "email": "admin@example.com",
+  "password": "admin123"
+}
+
+### ===========================================
+### Performance Benchmarks
+### ===========================================
+
+### Baseline response time test
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "admin@example.com",
+  "password": "admin123"
+}
+
+### Database query performance
+GET {{baseUrl}}/books
+Authorization: Bearer {{seedToken}}
+
+### JWT generation performance
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "email": "perf-{{$timestamp}}@example.com",
+  "password": "performance123",
+  "name": "Performance Test User"
+}
+
+### ===========================================
+### Integration Tests
+### ===========================================
+
+### Full workflow test
+### 1. Register
+# @name integrationRegister
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "email": "integration-{{$timestamp}}@example.com",
+  "password": "integration123",
+  "name": "Integration Test User"
+}
+
+### 2. Login with registered user
+@integrationToken = {{integrationRegister.response.body.token}}
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "integration-{{$timestamp}}@example.com",
+  "password": "integration123"
+}
+
+### 3. Access protected resource
+GET {{baseUrl}}/books
+Authorization: Bearer {{integrationToken}}
+
+### ===========================================
+### Monitoring and Logging Tests
+### ===========================================
+
+### Generate various log levels
+### Success scenario
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "admin@example.com",
+  "password": "admin123"
+}
+
+### Warning scenario (invalid credentials)
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "nonexistent@example.com",
+  "password": "wrongpassword"
+}
+
+### Error scenario (malformed request)
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "invalid-json-here"
+
+### ===========================================
+### Security Compliance Tests
+### ===========================================
+
+### Test HTTPS enforcement (production)
+### This should redirect or fail on HTTP in production
+GET http://localhost:8080/auth/test
+
+### Test security headers
+GET {{baseUrl}}/auth/test
+
+### Test rate limiting (if implemented)
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "admin@example.com",
+  "password": "wrong"
+}
+
+###
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "admin@example.com",
+  "password": "wrong"
+}
+
+###
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "admin@example.com",
+  "password": "wrong"
+}
+
+### ===========================================
+### Deployment Verification
+### ===========================================
+
+### Verify all endpoints are accessible
+GET {{baseUrl}}/auth/test
+###
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "admin@example.com",
+  "password": "admin123"
+}
+
+###
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "email": "deploy-test-{{$timestamp}}@example.com",
+  "password": "deploy123",
+  "name": "Deployment Test User"
+}
+
+### Verify database is working
+# @name deployLogin
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "admin@example.com",
+  "password": "admin123"
+}
+
+###
+@deployToken = {{deployLogin.response.body.token}}
+GET {{baseUrl}}/books
+Authorization: Bearer {{deployToken}}

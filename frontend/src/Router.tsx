@@ -4,6 +4,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { DefaultLayout } from './layouts/DefaultLayout';
 import { BookPage } from "./pages/BookPage/BookPage";
 import { HomePage } from "./pages/HomePage/HomePage";
+import { AuthPage } from "./pages/AuthPage/AuthPage";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 import { useThemeStore } from "./store/useThemeStore";
 import { darkTheme, lightTheme } from "./theme";
 
@@ -19,9 +21,17 @@ export const Router = () => {
         <CssBaseline />
         <BrowserRouter>
           <Routes>
+            <Route path="/auth" element={<AuthPage />} />
             <Route element={<DefaultLayout />}>
               <Route path="/" element={<HomePage />} />
-              <Route path="/books" element={<BookPage />} />  
+              <Route 
+                path="/books" 
+                element={
+                  <ProtectedRoute>
+                    <BookPage />
+                  </ProtectedRoute>
+                } 
+              />  
             </Route>
           </Routes>
         </BrowserRouter>
